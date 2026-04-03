@@ -17,9 +17,7 @@ import java.util.List;
 
 
 public class WolfHerdingGoal extends Goal {
-    //TODO Co-op herding
 
-    //TODO moving herd's CoM
     //Sheep Acquisition
     private final WolfEntity dog;
     private List<MobEntity> herdableList;
@@ -79,12 +77,12 @@ public class WolfHerdingGoal extends Goal {
             double circleRadius = Math.sqrt(outer.squaredDistanceTo(circleCenter));
 
             //Math basics for setting up herd system
-            Vec3d radialUnitVector = this.dog.getPos().subtract(circleCenter).normalize();
-            Vec3d furthestUnitVector = outer.getPos().subtract(circleCenter).normalize();
+            Vec3d radialUnitVector = this.dog.getEntityPos().subtract(circleCenter).normalize();
+            Vec3d furthestUnitVector = outer.getEntityPos().subtract(circleCenter).normalize();
             boolean dogLinedUp = BARK_ANGLE*BARK_ANGLE > 2-2*furthestUnitVector.dotProduct(radialUnitVector);
 
             //actual movement
-            Vec3d target = dog.getPos();
+            Vec3d target = dog.getEntityPos();
             double speed = herdingSpeed;
             if(circleRadius > acceptableSpread*Math.sqrt(herdableList.size())){
                 if(dogOnCircle(circleCenter,circleRadius + SPACING) && dogLinedUp) {
@@ -98,8 +96,8 @@ public class WolfHerdingGoal extends Goal {
                     if(!closeHerdables.isEmpty()){closeHerdables.remove(outer);}
                     if(!closeHerdables.isEmpty()){
                         Vec3d localCoM = SheepHelper.CenterOfMass(closeHerdables);
-                        Vec3d furthestLocalUnit = outer.getPos().subtract(localCoM).normalize();
-                        Vec3d dogLocalUnit = this.dog.getPos().subtract(localCoM).normalize();
+                        Vec3d furthestLocalUnit = outer.getEntityPos().subtract(localCoM).normalize();
+                        Vec3d dogLocalUnit = this.dog.getEntityPos().subtract(localCoM).normalize();
                         double localAngleRepr = furthestLocalUnit.dotProduct(dogLocalUnit);
                         boolean shouldWalkAround = localAngleRepr < 0.5 && localAngleRepr > -0.2 && closeHerdables.size() < 3;
                         if(shouldWalkAround){
@@ -118,7 +116,7 @@ public class WolfHerdingGoal extends Goal {
     }
 
     private List<MobEntity> getNearbyFlock(double range){
-        return this.dog.getWorld().getEntitiesByClass(MobEntity.class,
+        return this.dog.getEntityWorld().getEntitiesByClass(MobEntity.class,
                 dog.getBoundingBox().expand(range,4,range),
                 (e) -> (e.getType().isIn(ModEntityTypeTags.HERDABLE)));
     }

@@ -57,9 +57,15 @@ public class BabyDontHerdMe implements ModInitializer {
 				(t, context)->context.server().execute(()->{
 					ServerPlayerEntity player = context.player();
 					player.emitGameEvent(gameEvent);
-					player.getWorld().playSoundFromEntity(player, player, soundEvent, SoundCategory.PLAYERS, 4.0f, 1.0f);
-					player.playSoundToPlayer(soundEvent, SoundCategory.PLAYERS, 4.0f, 1.0f);
-					List<WolfEntity> dogs = player.getWorld().getEntitiesByClass(WolfEntity.class,
+					player.getEntityWorld().playSound(
+							null,
+							player.getBlockPos(),
+							soundEvent,
+							SoundCategory.PLAYERS,
+							4.0f,
+							1.0f
+					);
+					List<WolfEntity> dogs = player.getEntityWorld().getEntitiesByClass(WolfEntity.class,
 							player.getBoundingBox().expand(WOLF_WHISTLE_RANGE, 10.0, WOLF_WHISTLE_RANGE),
 							(wolf)->wolf.isOwner(player));
 					for(WolfEntity dog : dogs) {

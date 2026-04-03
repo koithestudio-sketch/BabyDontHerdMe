@@ -10,7 +10,7 @@ public class SheepHelper {
         if(!animals.isEmpty()){
             Vec3d com = new Vec3d(0.0,0.0,0.0);
             for(T animal : animals){
-                com = com.add(animal.getPos());
+                com = com.add(animal.getEntityPos());
             }
             com = com.multiply(1.0/animals.size());
             return com;

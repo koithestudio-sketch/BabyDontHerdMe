@@ -38,14 +38,14 @@ public class FlockHerdingGoal extends Goal {
     }
 
     private List<LivingEntity> findHerders(){
-        return mob.getWorld().getEntitiesByClass(LivingEntity.class,
+        return mob.getEntityWorld().getEntitiesByClass(LivingEntity.class,
                 getOneByOneBox().expand(WOLF_VISION_RANGE, 2, WOLF_VISION_RANGE),
                 (herder)->(herder instanceof Herding h && h.isScary()));
     }
 
     public void tick(){
         Vec3d herderCenter = SheepHelper.CenterOfMass(findHerders());
-        Vec3d sheepPos = this.mob.getPos();
+        Vec3d sheepPos = this.mob.getEntityPos();
         Vec3d separation = sheepPos.subtract(herderCenter);
         double sepD = separation.length();
         separation = separation.multiply(Math.max(1.0,Math.min(WOLF_VISION_RANGE/(sepD*sepD),1.3)));
@@ -58,13 +58,13 @@ public class FlockHerdingGoal extends Goal {
     }
 
     private List<MobEntity> nearbyFlock(){
-        return this.mob.getWorld().getEntitiesByClass(MobEntity.class,
+        return this.mob.getEntityWorld().getEntitiesByClass(MobEntity.class,
                 getOneByOneBox().expand(SHEEP_VISION_RANGE,4,SHEEP_VISION_RANGE), 
                 (e) -> (e.getType().isIn(ModEntityTypeTags.HERDABLE)));
     }
 
     private Box getOneByOneBox() {
-        Position pos = this.mob.getPos();
+        Position pos = this.mob.getEntityPos();
         Box box = new Box(new Vec3d(pos.getX() - 0.5, pos.getY() - 0.5, pos.getZ() - 0.5) , new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
         return box;
     }

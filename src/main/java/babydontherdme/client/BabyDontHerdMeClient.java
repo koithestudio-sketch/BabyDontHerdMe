@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
+import net.minecraft.util.Identifier;
 
 public class BabyDontHerdMeClient implements ClientModInitializer {
     private KeyBinding whistle_recall;
@@ -19,19 +20,24 @@ public class BabyDontHerdMeClient implements ClientModInitializer {
     private boolean goPressedBefore = false;
     private int goCooldown = 0;
 
+    public static final Identifier HERDING_CATEGORY =
+            Identifier.of("baby_dont_herd_me", "herding");
+    public static final KeyBinding.Category HERDING =
+            new KeyBinding.Category(HERDING_CATEGORY);
+
     @Override
     public void onInitializeClient() {
         whistle_recall = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.baby_dont_herd_me.recall",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_N,
-                "category.baby_dont_herd_me.herding"
+                HERDING
         ));
         whistle_go = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key.baby_dont_herd_me.go",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_M,
-            "category.baby_dont_herd_me.herding"
+            HERDING
     ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             boolean pressedNow = whistle_recall.isPressed();
